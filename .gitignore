@@ -1,0 +1,21 @@
+# Dataset (ignora tutto in data tranne .gitkeep)
+data/*
+!data/.gitkeep
+
+# Output pesanti (modelli/checkpoint)
+results/*
+!results/.gitkeep
+
+# Python e Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Ignora tutti i file e le cartelle che iniziano con un punto (.venv, .vscode, .idea, ecc.)
+.*
+
+# Escludi dall'ignore questi file fondamentali che devono comunque essere tracciati su Git:
+!.gitignore
+!.gitkeep
