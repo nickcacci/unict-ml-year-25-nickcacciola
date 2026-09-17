@@ -11,7 +11,10 @@ Componenti inclusi:
 import os
 import numpy as np
 import torch
-from torch.utils.tensorboard import SummaryWriter
+try:
+    from torch.utils.tensorboard import SummaryWriter
+except ImportError:
+    SummaryWriter = None
 from tqdm.auto import tqdm
 
 
@@ -63,7 +66,7 @@ def train_cnn(
     # Creazione directory e inizializzazione TensorBoard
     os.makedirs(logdir, exist_ok=True)
     os.makedirs(checkpoint_dir, exist_ok=True)
-    writer = SummaryWriter(os.path.join(logdir, exp_name))
+    writer = SummaryWriter(os.path.join(logdir, exp_name)) if SummaryWriter is not None else None
 
     loss_meter = AverageValueMeter()
     acc_meter = AverageValueMeter()
@@ -120,8 +123,9 @@ def train_cnn(
             print(f"[{mode.upper()}] Loss: {epoch_loss:.4f} - Accuracy: {epoch_acc * 100:.2f}%")
 
             # 5. Logging scalari su TensorBoard
-            writer.add_scalar(f"loss/{mode}", epoch_loss, epoch + 1)
-            writer.add_scalar(f"accuracy/{mode}", epoch_acc, epoch + 1)
+            if writer:
+                writer.add_scalar(f"loss/{mode}", epoch_loss, epoch + 1)
+                writer.add_scalar(f"accuracy/{mode}", epoch_acc, epoch + 1)
 
             # 6. Checkpointing: salviamo il modello con la miglior validation accuracy
             if mode == "val" and epoch_acc > best_val_acc:
@@ -130,6 +134,7 @@ def train_cnn(
                 torch.save(model.state_dict(), checkpoint_path)
                 print(f"  --> Salvato nuovo miglior checkpoint in: {checkpoint_path} (Val Acc: {best_val_acc * 100:.2f}%)")
 
-    writer.close()
+    if writer:
+        writer.close()
     print(f"\n--> Training completato! Miglior Val Accuracy: {best_val_acc * 100:.2f}%")
     return model

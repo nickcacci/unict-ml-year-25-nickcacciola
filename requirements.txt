@@ -11,3 +11,4 @@ ipython
 tensorboard
 tqdm
 requests
+streamlit

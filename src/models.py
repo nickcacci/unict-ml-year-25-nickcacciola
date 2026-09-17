@@ -6,11 +6,16 @@ Modelli inclusi:
                    e testa densa a 3 layer FC, ottimizzata per input 48x48 e 43 classi.
     - get_resnet18_feature_extractor: Spina dorsale convoluzionale di ResNet-18 pre-addestrata
                                       su ImageNet per l'estrazione di feature embeddings (512-D).
+    - cnn_inference: Valuta il modello sul test set estraendo previsioni e probabilità Softmax.
+    - extract_resnet_features: Estrae i feature embeddings da un DataLoader usando una spina dorsale convoluzionale.
 """
 
 import torch
-from torch import nn
+import torch.nn as nn
+from torch.utils.data import DataLoader
 from torchvision import models
+import numpy as np
+from tqdm.auto import tqdm
 H=48
 W=48
 K=43

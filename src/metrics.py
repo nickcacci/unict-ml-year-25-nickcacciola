@@ -9,7 +9,10 @@ Funzioni incluse:
     - plot_metrics: Mostra la tabella riassuntiva e genera il grafico a barre comparativo con Seaborn.
 """
 
-from IPython.display import display
+try:
+    from IPython.display import display
+except ImportError:
+    display = print
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -21,7 +24,10 @@ from sklearn.metrics import (
     recall_score,
     top_k_accuracy_score,
 )
-import seaborn as sns
+try:
+    import seaborn as sns
+except ImportError:
+    sns = None
 
 
 def imbalance_stats(freq_df: pd.Series, num_classes: int = 43):
